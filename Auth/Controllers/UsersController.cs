@@ -1,0 +1,47 @@
+﻿using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Web.Mvc;
+using Auth.Models;
+using Auth.DAL;
+
+namespace Auth.Controllers
+{
+    public class UsersController : Controller
+    {
+        public ActionResult Index()
+        {
+            if (Session["Role"] == null || Session["Role"].ToString() != "Admin")
+            {
+                return Content("Access denied. Admins only.");
+            }
+
+            List<User> users = new List<User>();
+
+            using (SqlConnection conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+
+                string query = "SELECT * FROM Users";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        users.Add(new User
+                        {
+                            Id = (int)reader["Id"],
+                            FullName = reader["FullName"].ToString(),
+                            Username = reader["Username"].ToString(),
+                            Email = reader["Email"].ToString(),
+                            Role = reader["Role"].ToString()
+                        });
+                    }
+                }
+            }
+
+            return View(users);
+        }
+    }
+}

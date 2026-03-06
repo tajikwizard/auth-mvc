@@ -1,0 +1,82 @@
+﻿@model List<Auth.Models.User>
+
+@{
+    ViewBag.Title = "Users";
+}
+
+<div class="container mt-5">
+
+    <div class="card shadow-lg border-0">
+
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Идоракунии корбар</h4>
+            <span class="badge bg-light text-dark">
+                Total Users: @Model.Count
+            </span>
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Full Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    <span class="fw-bold">#@user.Id</span>
+                                </td>
+
+                                <td>
+                                    <strong>@user.FullName</strong>
+                                </td>
+
+                                <td>
+                                    <span class="text-muted">@user.Username</span>
+                                </td>
+
+                                <td>
+                                    <span class="text-primary">@user.Email</span>
+                                </td>
+
+                                <td>
+
+                                    @if (user.Role == "Admin")
+                                    {
+                                        <span class="badge bg-danger">Admin</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">User</span>
+                                    }
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,131 @@
+﻿@{
+    ViewBag.Title = "Login";
+}
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger text-center">
+        @TempData["Error"]
+    </div>
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<style>
+
+    body {
+        background: #f5f7fb;
+    }
+
+    .auth-container {
+        height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .auth-card {
+        width: 900px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        background: white;
+    }
+
+    .auth-left {
+        background: linear-gradient(135deg,#4f46e5,#3b82f6);
+        color: white;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+        .auth-left h2 {
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+    .auth-right {
+        padding: 40px;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        padding: 12px;
+    }
+
+    .btn-login {
+        background: #4f46e5;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+        .btn-login:hover {
+            background: #4338ca;
+        }
+
+    .small-link {
+        font-size: 14px;
+    }
+</style>
+
+
+<div class="container auth-container">
+
+    <div class="row auth-card">
+
+        <!-- LEFT PANEL -->
+        <div class="col-md-5 auth-left">
+
+            <h2>Бозгашт муборак👋</h2>
+
+            <p>
+
+                Барои дастрасӣ ба панели идоракунӣ, идора кардани паёмҳо ва омӯхтани платформа ба  акканути худ ворид шавед.
+            </p>
+
+        </div>
+
+
+        <!-- RIGHT PANEL -->
+        <div class="col-md-7 auth-right">
+
+            <h3 class="mb-4">Login to your account</h3>
+
+            <form method="post">
+
+                <div class="mb-3">
+                    <label>Email</label>
+                    <input type="email" name="Email" class="form-control" placeholder="example@email.com" required />
+                </div>
+
+                <div class="mb-4">
+                    <label>Password</label>
+                    <input type="password" name="Password" class="form-control" placeholder="Enter password" required />
+                </div>
+
+                <button type="submit" class="btn btn-login w-100 text-white">
+                    Sign In
+                </button>
+
+            </form>
+
+            <p class="mt-3 text-center small-link">
+                Don't have an account?
+                <a href="/Account/Register">Register</a>
+            </p>
+
+        </div>
+
+    </div>
+
+</div>

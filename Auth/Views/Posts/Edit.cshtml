@@ -1,0 +1,22 @@
+﻿@model Auth.Models.Post
+
+<h2>Edit Post</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(m => m.Id)
+
+    <div>
+        <label>Title</label>
+        @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+    </div>
+
+    <div>
+        <label>Content</label>
+        @Html.TextAreaFor(m => m.Content, new { @class = "form-control", rows = 6 })
+    </div>
+
+    <br />
+
+    <button class="btn btn-success">Save Changes</button>
+}
