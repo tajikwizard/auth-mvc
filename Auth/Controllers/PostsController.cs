@@ -14,7 +14,7 @@ namespace Auth.Controllers
         {
             if (Session["UserId"] == null)
             {
-                return Content("You must login first.");
+                return View("AccessDenied");
             }
 
             List<Post> posts = new List<Post>();
@@ -87,7 +87,7 @@ namespace Auth.Controllers
         {
             if (Session["Username"] == null)
             {
-                return Content("You are not authorized. Please login.");
+                return View("AccessDenied");
             }
 
             Post post = null;
@@ -120,7 +120,7 @@ namespace Auth.Controllers
             // SECURITY CHECK
             if (post == null)
             {
-                return Content("Post not found.");
+                return View("AccessDenied");
             }
 
             string role = Session["Role"].ToString();
@@ -130,7 +130,7 @@ namespace Auth.Controllers
                 && role != "Editor"
                 && role != "Moderator")
             {
-                return Content("You cannot edit this post.");
+                return View("AccessDenied");
             }
 
             return View(post);
@@ -142,7 +142,7 @@ namespace Auth.Controllers
         {
             if (Session["Username"] == null)
             {
-                return Content("You are not authorized.");
+                return View("AccessDenied");  
             }
 
             using (SqlConnection conn = DatabaseHelper.GetConnection())
@@ -190,7 +190,7 @@ namespace Auth.Controllers
             string role = Session["Role"].ToString();
 
             if (role != "Moderator" && role != "Admin")
-                return Content("Access denied.");
+                return View("AccessDenied");
 
             using (SqlConnection conn = DatabaseHelper.GetConnection())
             {

@@ -12,7 +12,7 @@ namespace Auth.Controllers
         {
             if (Session["Role"] == null || Session["Role"].ToString() != "Admin")
             {
-                return Content("Access denied. Admins only.");
+                return View("AccessDenied");
             }
 
             List<User> users = new List<User>();
@@ -52,7 +52,7 @@ namespace Auth.Controllers
         {
             if (Session["Role"] == null || Session["Role"].ToString() != "Admin")
             {
-                return Content("Access denied.");
+                return View("AccessDenied");
             }
 
             using (SqlConnection conn = DatabaseHelper.GetConnection())

@@ -18,6 +18,13 @@ namespace Auth
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Account", action = "Register", id = UrlParameter.Optional }
             );
+
+
+            routes.MapRoute(
+                name: "NotFound",
+                url: "{*url}", // matches any URL that wasn't matched before
+                defaults: new { controller = "Error", action = "NotFound" }
+            );
         }
     }
 }
