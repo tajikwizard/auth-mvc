@@ -123,8 +123,12 @@ namespace Auth.Controllers
                 return Content("Post not found.");
             }
 
-            // Only author or admin can edit
-            if (post.Author != Session["Username"].ToString() && Session["Role"].ToString() != "Admin")
+            string role = Session["Role"].ToString();
+
+            if (post.Author != Session["Username"].ToString()
+                && role != "Admin"
+                && role != "Editor"
+                && role != "Moderator")
             {
                 return Content("You cannot edit this post.");
             }
@@ -149,8 +153,9 @@ namespace Auth.Controllers
                          SET Title=@Title, Content=@Content
                          WHERE Id=@Id";
 
-                // If not admin, restrict update to own posts
-                if (Session["Role"].ToString() != "Admin")
+                string role = Session["Role"].ToString();
+
+                if (role == "User")
                 {
                     query += " AND Author=@Author";
                 }
@@ -161,11 +166,41 @@ namespace Auth.Controllers
                     cmd.Parameters.AddWithValue("@Content", post.Content);
                     cmd.Parameters.AddWithValue("@Id", post.Id);
 
-                    if (Session["Role"].ToString() != "Admin")
+                    if (role == "User")
                     {
                         cmd.Parameters.AddWithValue("@Author", Session["Username"].ToString());
                     }
 
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            return RedirectToAction("Index");
+        }
+
+
+
+
+        //DELETING POST
+        public ActionResult Delete(int id)
+        {
+            if (Session["Role"] == null)
+                return RedirectToAction("Login", "Account");
+
+            string role = Session["Role"].ToString();
+
+            if (role != "Moderator" && role != "Admin")
+                return Content("Access denied.");
+
+            using (SqlConnection conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+
+                string query = "DELETE FROM Posts WHERE Id=@Id";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Id", id);
                     cmd.ExecuteNonQuery();
                 }
             }

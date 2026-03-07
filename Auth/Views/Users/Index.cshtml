@@ -28,6 +28,7 @@
                             <th>Username</th>
                             <th>Email</th>
                             <th>Role</th>
+                            <th>Access</th>
                         </tr>
                     </thead>
 
@@ -53,23 +54,60 @@
                                     <span class="text-primary">@user.Email</span>
                                 </td>
 
-                                <td>
+                                
+
+                                    <td>
 
                                     @if (user.Role == "Admin")
                                     {
                                         <span class="badge bg-danger">Admin</span>
+                                    }
+                                    else if (user.Role == "Moderator")
+                                    {
+                                        <span class="badge bg-warning text-dark">Moderator</span>
+                                    }
+                                    else if (user.Role == "Editor")
+                                    {
+                                        <span class="badge bg-primary">Editor</span>
                                     }
                                     else
                                     {
                                         <span class="badge bg-success">User</span>
                                     }
 
+                                    </td>
+
+                               
+
+                                <td>
+                                    <form method="post" action="/Users/ChangeRole">
+
+                                        <input type="hidden" name="userId" value="@user.Id" />
+
+                                        <select name="role" class="form-select form-select-sm" onchange="this.form.submit()">
+
+                                            <option value="User" @(user.Role == "User" ? "selected" : "")>User</option>
+
+                                            <option value="Editor" @(user.Role == "Editor" ? "selected" : "")>Editor</option>
+
+                                            <option value="Moderator" @(user.Role == "Moderator" ? "selected" : "")>Moderator</option>
+
+                                            <option value="Admin" @(user.Role == "Admin" ? "selected" : "")>Admin</option>
+
+                                        </select>
+
+                                    </form>
                                 </td>
 
                             </tr>
+                            
                         }
 
+
+
                     </tbody>
+
+
 
                 </table>
 

@@ -91,12 +91,15 @@ namespace Auth.Controllers
             return RedirectToAction("Login");
         }
     
-            // GET: Login Page
-            public ActionResult Login()
-            {
+            
+        
+        // GET: Login Page
+        public ActionResult Login()
+        {
                 return View();
-            }
+        }
 
+        // POST: Login Page
         [HttpPost]
         public ActionResult Login(string Email, string Password)
         {

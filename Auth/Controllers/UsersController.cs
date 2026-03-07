@@ -43,5 +43,34 @@ namespace Auth.Controllers
 
             return View(users);
         }
+
+
+
+
+        [HttpPost]
+        public ActionResult ChangeRole(int userId, string role)
+        {
+            if (Session["Role"] == null || Session["Role"].ToString() != "Admin")
+            {
+                return Content("Access denied.");
+            }
+
+            using (SqlConnection conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+
+                string query = "UPDATE Users SET Role=@Role WHERE Id=@Id";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Role", role);
+                    cmd.Parameters.AddWithValue("@Id", userId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            return RedirectToAction("Index");
+        }
     }
 }
