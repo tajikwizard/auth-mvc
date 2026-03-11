@@ -1,12 +1,13 @@
-﻿using Auth.Models;
+﻿using Auth.DAL;
+using Auth.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
-using Auth.DAL;
-using System.Reflection;
 
 namespace Auth.Controllers
 {
@@ -49,50 +50,58 @@ namespace Auth.Controllers
                 return View(user);
             }
 
-            using (SqlConnection conn = DatabaseHelper.GetConnection())
+            try
             {
-                conn.Open();
-
-                string checkEmailQuery = "SELECT COUNT(*) FROM Users WHERE Email=@Email";
-
-                using (SqlCommand cmd = new SqlCommand(checkEmailQuery, conn))
+                using (SqlConnection conn = DatabaseHelper.GetConnection())
                 {
-                    cmd.Parameters.AddWithValue("@Email", user.Email.Trim());
+                    conn.Open();
 
-                    int count = (int)cmd.ExecuteScalar();
-                    if (count > 0)
+                    SqlCommand cmd = new SqlCommand("registerUser", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    //cmd.Parameters.AddWithValue("@FullName", user.FullName.Trim());
+                    //cmd.Parameters.AddWithValue("@Username", user.Username.Trim());
+                    //cmd.Parameters.AddWithValue("@Email", user.Email.Trim());
+                    //cmd.Parameters.AddWithValue("@Password", user.Password.Trim());
+                    //cmd.Parameters.AddWithValue("@Role", "user");
+
+
+                    cmd.Parameters.Add("@FullName", SqlDbType.NVarChar, 255).Value = user.FullName.Trim();
+                    cmd.Parameters.Add("@Username", SqlDbType.NVarChar, 255).Value = user.Username.Trim();
+                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar, 255).Value = user.Email.Trim();
+                    cmd.Parameters.Add("@Password", SqlDbType.NVarChar, 255).Value = user.Password.Trim();
+                    cmd.Parameters.Add("@Role", SqlDbType.NVarChar, 50).Value = user.Role.Trim();
+
+
+                    // Output parameter for status
+                    SqlParameter statusParam = new SqlParameter("@Status", SqlDbType.Int)
                     {
-                        ModelState.AddModelError("", "Ин почтаи электронӣ аллакай вуҷуд дорад..");
+                        Direction = ParameterDirection.Output
+                    };
+                    cmd.Parameters.Add(statusParam);
+
+                    cmd.ExecuteNonQuery();
+
+                    int status = (int)statusParam.Value;
+                    if (status == 0)
+                    {
+                        // Email already exists
+                        ModelState.AddModelError("", "Ин почтаи электронӣ аллакай вуҷуд дорад.");
                         return View(user);
                     }
                 }
-
-                string insertQuery = @"
-                    INSERT INTO Users (FullName, Username, Email, Password, Role)
-                    VALUES (@FullName, @Username, @Email, @Password, @Role)";
-
-
-                using (SqlCommand cmd = new SqlCommand(insertQuery, conn))
-                {
-                    cmd.Parameters.AddWithValue("@FullName", user.FullName.Trim());
-                    cmd.Parameters.AddWithValue("@Username", user.Username.Trim());
-                    cmd.Parameters.AddWithValue("@Email", user.Email.Trim());
-
-                    // Hash the password (simple example)
-                    cmd.Parameters.AddWithValue("@Password", user.Password);
-
-                    cmd.Parameters.AddWithValue("@Role", user.Role);
-
-                    cmd.ExecuteNonQuery();
-                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Хато рух дод: " + ex.Message);
+                return View(user);
             }
 
-            TempData["Success"] = "Registration successful! You can now login.";
             return RedirectToAction("Login");
         }
-    
-            
-        
+
+
+
         // GET: Login Page
         public ActionResult Login()
         {
@@ -109,21 +118,26 @@ namespace Auth.Controllers
                 {
                     conn.Open();
 
-                    string query = "SELECT * FROM Users WHERE Email=@Email AND Password=@Password";
+                    SqlCommand cmd = new SqlCommand("loginUser", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    //cmd.Parameters.AddWithValue("@Email", Email.Trim());
+                    //cmd.Parameters.AddWithValue("@Password", Password);
+
+                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar, 255).Value = Email.Trim();
+                    cmd.Parameters.Add("@Password", SqlDbType.NVarChar, 255).Value = Password.Trim();
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
                     {
-                        cmd.Parameters.AddWithValue("@Email", Email.Trim());
-                        cmd.Parameters.AddWithValue("@Password", Password);
-
-                        SqlDataReader reader = cmd.ExecuteReader();
-
-                        if (reader.Read())
+                        DataTable dt = new DataTable();
+                        adapter.Fill(dt);
+                        if (dt.Rows.Count > 0)
                         {
+                            DataRow row = dt.Rows[0];
                             // Create session
-                            Session["UserId"] = reader["Id"];
-                            Session["Username"] = reader["Username"];
-                            Session["Role"] = reader["Role"];
+                            Session["UserId"] = row["Id"];
+                            Session["Username"] = row["Username"];
+                            Session["Role"] = row["Role"];
 
                             return RedirectToAction("Index", "Dashboard");
                         }
@@ -137,7 +151,7 @@ namespace Auth.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.Error = ex.Message;
+                ViewBag.Error = "Хато: " + ex.Message;
                 return View();
             }
         }

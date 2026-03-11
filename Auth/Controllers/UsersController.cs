@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Auth.DAL;
+using Auth.Models;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Web.Mvc;
-using Auth.Models;
-using Auth.DAL;
 
 namespace Auth.Controllers
 {
