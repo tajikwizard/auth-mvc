@@ -1,15 +1,85 @@
 ﻿@model Auth.Models.Post
 
-@{
-    ViewBag.Title = "Create Post";
-}
+<style>
+    /* Container */
+    .create-post-container {
+        max-width: 700px;
+        margin: 40px auto;
+    }
 
-<div class="container mt-5">
+    /* Card styling */
+    .card-modern {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+        background: #f4f8fc;
+    }
 
-    <div class="card shadow-lg">
+        .card-modern:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
 
-        <div class="card-header bg-dark text-white">
-            <h4>Create Post</h4>
+    /* Card header */
+    .card-header-modern {
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+        background: linear-gradient(90deg, #1e3c72, #2a5298);
+        color: #fff;
+        font-weight: 600;
+        font-size: 1.5rem;
+        padding: 15px 20px;
+    }
+
+    /* Form labels */
+    .card-body label {
+        font-weight: 500;
+        margin-bottom: 5px;
+        display: block;
+        color: #2a2a2a;
+    }
+
+    /* Inputs & textarea */
+    .card-body .form-control {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        padding: 0.5rem 0.75rem;
+        transition: all 0.2s;
+    }
+
+        .card-body .form-control:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 5px rgba(42,82,152,0.4);
+        }
+
+    /* Button styling */
+    .btn-modern {
+        border-radius: 10px;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+
+    .btn-modern-success {
+        background: linear-gradient(90deg, #28a745, #1e7e34);
+        color: #fff;
+        border: none;
+    }
+
+        .btn-modern-success:hover {
+            background: linear-gradient(90deg, #1e7e34, #28a745);
+            color: #fff;
+        }
+</style>
+
+<div class="create-post-container">
+
+    <div class="card card-modern">
+
+        <div class="card-header card-header-modern">
+            Create Post
         </div>
 
         <div class="card-body">
@@ -18,15 +88,15 @@
 
                 <div class="mb-3">
                     <label>Post Title</label>
-                    <input type="text" name="Title" class="form-control" required />
+                    <input type="text" name="Title" class="form-control" placeholder="Enter your post title" required />
                 </div>
 
                 <div class="mb-3">
                     <label>Content</label>
-                    <textarea name="Content" class="form-control" rows="6" required></textarea>
+                    <textarea name="Content" class="form-control" rows="6" placeholder="Write your post content here..." required></textarea>
                 </div>
 
-                <button class="btn btn-success">
+                <button class="btn btn-modern btn-modern-success">
                     Publish Post
                 </button>
 

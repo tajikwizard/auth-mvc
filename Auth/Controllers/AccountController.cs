@@ -156,6 +156,66 @@ namespace Auth.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult ChangePassword()
+        {
+
+            if (Session["UserId"] == null)
+            {
+                TempData["Error"] = "Шумо барои дастрасӣ ба ин саҳифа иҷозат надоред. Лутфан ворид шавед.";
+                return RedirectToAction("Login", "Account");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ChangePassword(FormCollection form)
+        {
+            if (Session["Username"] == null)
+                return RedirectToAction("Login", "Account");
+
+            string username = Session["Username"].ToString();
+            string current = form["CurrentPassword"];
+            string newPass = form["NewPassword"];
+
+            if (string.IsNullOrEmpty(current) || string.IsNullOrEmpty(newPass))
+            {
+                ViewBag.ErrorMessage = "Fields cannot be empty!";
+                return View();
+            }
+
+            using (SqlConnection conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+
+                // Verify current password
+                string checkQuery = "SELECT Password FROM Users WHERE Username=@Username";
+                using (SqlCommand cmd = new SqlCommand(checkQuery, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Username", username);
+                    var dbPassword = cmd.ExecuteScalar()?.ToString();
+
+                    if (dbPassword != current)
+                    {
+                        ViewBag.ErrorMessage = "Current password is incorrect!";
+                        return View();
+                    }
+                }
+
+                // Update password
+                string updateQuery = "UPDATE Users SET Password=@Password WHERE Username=@Username";
+                using (SqlCommand cmd = new SqlCommand(updateQuery, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Password", newPass);
+                    cmd.Parameters.AddWithValue("@Username", username);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            ViewBag.SuccessMessage = "Password changed successfully!";
+            return View();
+        }
+
 
 
         public ActionResult Logout()

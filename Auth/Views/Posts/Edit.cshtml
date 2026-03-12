@@ -1,22 +1,85 @@
 ﻿@model Auth.Models.Post
 
-<h2>Edit Post</h2>
+<style>
+    /* Form container */
+    .edit-post-container {
+        max-width: 700px;
+        margin: 30px auto;
+        padding: 30px;
+        border-radius: 12px;
+        background: #f4f8fc;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    }
 
-@using (Html.BeginForm())
-{
-    @Html.HiddenFor(m => m.Id)
+    /* Form header */
+    .edit-post-header {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #1e3c72;
+        margin-bottom: 25px;
+        border-bottom: 2px solid #2a5298;
+        padding-bottom: 10px;
+    }
 
-    <div>
-        <label>Title</label>
-        @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
-    </div>
+    /* Form labels */
+    .edit-post-container label {
+        font-weight: 500;
+        margin-bottom: 5px;
+        display: block;
+        color: #2a2a2a;
+    }
 
-    <div>
-        <label>Content</label>
-        @Html.TextAreaFor(m => m.Content, new { @class = "form-control", rows = 6 })
-    </div>
+    /* Inputs and textarea */
+    .edit-post-container .form-control {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        padding: 0.5rem 0.75rem;
+        transition: all 0.2s;
+    }
 
-    <br />
+        .edit-post-container .form-control:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 5px rgba(42,82,152,0.4);
+        }
 
-    <button class="btn btn-success">Save Changes</button>
-}
+    /* Buttons */
+    .btn-modern {
+        border-radius: 10px;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+
+    .btn-modern-success {
+        background: linear-gradient(90deg, #28a745, #1e7e34);
+        color: #fff;
+        border: none;
+    }
+
+        .btn-modern-success:hover {
+            background: linear-gradient(90deg, #1e7e34, #28a745);
+            color: #fff;
+        }
+</style>
+
+<div class="edit-post-container">
+    <div class="edit-post-header">Edit Post</div>
+
+    @using (Html.BeginForm())
+    {
+        @Html.HiddenFor(m => m.Id)
+
+        <div class="mb-3">
+            <label>Title</label>
+            @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+        </div>
+
+        <div class="mb-3">
+            <label>Content</label>
+            @Html.TextAreaFor(m => m.Content, new { @class = "form-control", rows = 6 })
+        </div>
+
+        <button class="btn btn-modern btn-modern-success">Save Changes</button>
+    }
+</div>

@@ -4,24 +4,141 @@
     ViewBag.Title = "Users";
 }
 
+<style>
+    /* Card styling */
+    .card-modern {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        background: #f4f8fc;
+    }
+
+    .card-header-modern {
+        background: linear-gradient(90deg, #1e3c72, #2a5298);
+        color: #ffffff;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+        box-shadow: inset 0 -3px 6px rgba(0,0,0,0.1);
+    }
+
+    .table-modern th {
+        background: #1e3c72;
+        color: #fff;
+        font-weight: 500;
+    }
+
+    .table-modern tbody tr:hover {
+        background-color: rgba(30,60,114,0.1);
+        transition: background 0.2s;
+    }
+
+    .badge-modern {
+        font-weight: 500;
+        padding: 0.35em 0.6em;
+        border-radius: 8px;
+    }
+
+    .badge-user {
+        background: #28a745;
+        color: #fff;
+    }
+
+    .badge-editor {
+        background: #007bff;
+        color: #fff;
+    }
+
+    .badge-moderator {
+        background: #ffc107;
+        color: #1e1e1e;
+    }
+
+    .badge-admin {
+        background: #dc3545;
+        color: #fff;
+    }
+
+    /* Search form styling */
+    .form-modern input[type="date"] {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        padding: 0.375rem 0.75rem;
+        transition: all 0.2s;
+    }
+
+        .form-modern input[type="date"]:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 5px rgba(42,82,152,0.4);
+        }
+
+    .form-modern button {
+        border-radius: 8px;
+        background: #1e3c72;
+        border: none;
+        transition: all 0.2s;
+    }
+
+        .form-modern button:hover {
+            background: #2a5298;
+        }
+
+    /* Error & info alerts */
+    .alert-modern {
+        border-radius: 10px;
+        font-weight: 500;
+    }
+</style>
+
 <div class="container mt-5">
 
-    <div class="card shadow-lg border-0">
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger alert-modern">
+            @ViewBag.ErrorMessage
+        </div>
+    }
 
-        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-            <h4 class="mb-0">Идоракунии корбар</h4>
-            <span class="badge bg-light text-dark">
+    @if (ViewBag.FromDate != null && ViewBag.ToDate != null)
+    {
+        <div class="alert alert-info alert-modern mb-3">
+            Showing users from <strong>@ViewBag.FromDate</strong> to <strong>@ViewBag.ToDate</strong>.
+        </div>
+    }
+
+    <div class="text-center mb-4">
+        <h5 class="fw-bold">Choose the date to see registered users</h5>
+    </div>
+
+    <!-- Form START -->
+    <div class="row mb-4 justify-content-center form-modern">
+        <div class="col-md-3 mb-2">
+            <label class="form-label">From:</label>
+            <input type="date" id="fromDate" name="fromDate" class="form-control" />
+        </div>
+        <div class="col-md-3 mb-2">
+            <label class="form-label">To:</label>
+            <input type="date" id="toDate" name="toDate" class="form-control" />
+        </div>
+        <div class="col-md-2 align-self-end mb-2">
+            <button class="btn btn-primary w-100" id="searchBtn">Search</button>
+        </div>
+    </div>
+    <!-- Form END -->
+
+    <div class="card card-modern">
+
+        <div class="card-header card-header-modern d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">User Management</h4>
+            <span class="badge badge-modern badge-info">
                 Total Users: @Model.Count
             </span>
         </div>
 
         <div class="card-body">
-
             <div class="table-responsive">
-
-                <table class="table table-hover align-middle">
-
-                    <thead class="table-dark">
+                <table class="table table-hover table-modern align-middle">
+                    <thead>
                         <tr>
                             <th>ID</th>
                             <th>Full Name</th>
@@ -31,90 +148,62 @@
                             <th>Access</th>
                         </tr>
                     </thead>
-
                     <tbody>
-
                         @foreach (var user in Model)
                         {
                             <tr>
-
+                                <td>#@user.Id</td>
+                                <td><strong>@user.FullName</strong></td>
+                                <td class="text-muted">@user.Username</td>
+                                <td class="text-primary">@user.Email</td>
                                 <td>
-                                    <span class="fw-bold">#@user.Id</span>
-                                </td>
-
-                                <td>
-                                    <strong>@user.FullName</strong>
-                                </td>
-
-                                <td>
-                                    <span class="text-muted">@user.Username</span>
-                                </td>
-
-                                <td>
-                                    <span class="text-primary">@user.Email</span>
-                                </td>
-
-                                
-
-                                    <td>
-
                                     @if (user.Role == "Admin")
                                     {
-                                        <span class="badge bg-danger">Admin</span>
+                                        <span class="badge badge-modern badge-admin">Admin</span>
                                     }
                                     else if (user.Role == "Moderator")
                                     {
-                                        <span class="badge bg-warning text-dark">Moderator</span>
+                                        <span class="badge badge-modern badge-moderator">Moderator</span>
                                     }
                                     else if (user.Role == "Editor")
                                     {
-                                        <span class="badge bg-primary">Editor</span>
+                                        <span class="badge badge-modern badge-editor">Editor</span>
                                     }
                                     else
                                     {
-                                        <span class="badge bg-success">User</span>
+                                        <span class="badge badge-modern badge-user">User</span>
                                     }
-
-                                    </td>
-
-                               
-
+                                </td>
                                 <td>
                                     <form method="post" action="/Users/ChangeRole">
-
                                         <input type="hidden" name="userId" value="@user.Id" />
-
                                         <select name="role" class="form-select form-select-sm" onchange="this.form.submit()">
-
                                             <option value="User" @(user.Role == "User" ? "selected" : "")>User</option>
-
                                             <option value="Editor" @(user.Role == "Editor" ? "selected" : "")>Editor</option>
-
                                             <option value="Moderator" @(user.Role == "Moderator" ? "selected" : "")>Moderator</option>
-
                                             <option value="Admin" @(user.Role == "Admin" ? "selected" : "")>Admin</option>
-
                                         </select>
-
                                     </form>
                                 </td>
-
                             </tr>
-                            
                         }
-
-
-
                     </tbody>
-
-
-
                 </table>
-
             </div>
-
         </div>
 
     </div>
 
 </div>
+
+@section scripts {
+    <script>
+        document.getElementById('searchBtn').addEventListener('click', function () {
+            var from = document.getElementById('fromDate').value;
+            var to = document.getElementById('toDate').value;
+
+            // let server handle empty values
+            window.location.href = '@Url.Action("Search", "Users")?from=' + from + '&to=' + to;
+        });
+    </script>
+}
