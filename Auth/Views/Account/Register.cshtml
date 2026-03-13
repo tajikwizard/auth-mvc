@@ -99,35 +99,35 @@ body{
         <!-- RIGHT PANEL -->
         <div class="col-md-7 auth-right">
 
-            <h3 class="mb-4">Create Account</h3>
+            <h3 class="mb-4">Ҳисоб кушоед</h3>
 
             @using (Html.BeginForm("Register", "Account", FormMethod.Post))
             {
                 @Html.AntiForgeryToken()
 
                 <div class="mb-3">
-                    <label>Full Name</label>
-                    @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", placeholder = "Abdusamadzoda Abdulaziz" })
+                    <label>Ном ва Насаб</label>
+                    @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", placeholder = "Номи худро ворид намоед" })
                 </div>
 
                 <div class="mb-3 w-100">
-                    <label>Email</label>
-                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email", placeholder = "abdulaziz@email.com" })
+                    <label>Почта</label>
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email", placeholder = "Почта" })
                 </div>
 
                 <div class="mb-3">
-                    <label>Password</label>
-                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Enter password" })
+                    <label>Рамз</label>
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Рамзи худро ворид намоед" })
                 </div>
 
                 <button type="submit" class="btn btn-register w-100 text-white">
-                    Create Account
+                    Ҳисоб кушодан
                 </button>
             }
 
             <p class="mt-3 text-center">
-                Already have an account?
-                <a href="/Account/Login">Login</a>
+                Алакай хисоб доред?
+                <a href="/Account/Login">Даромадан</a>
             </p>
 
         </div>

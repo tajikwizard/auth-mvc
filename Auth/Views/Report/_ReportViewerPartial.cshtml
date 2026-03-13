@@ -1,0 +1,7 @@
+﻿@model DevExpress.XtraReports.UI.XtraReport
+@using DevExpress
+
+@Html.DevExpress().WebDocumentViewer(settings =>
+{
+    settings.Name = "DocumentViewer";
+}).Bind(Model).GetHtml()

@@ -20,6 +20,12 @@
         border-top-right-radius: 12px;
         box-shadow: inset 0 -3px 6px rgba(0,0,0,0.1);
     }
+    .btn-pdf {
+        background: linear-gradient(90deg, #001944, #002987);
+        color: #ffffff;
+        width:80px;
+        box-shadow: inset 0 -3px 6px rgba(0,0,0,0.1);
+    }
 
     .table-modern th {
         background: #1e3c72;
@@ -110,6 +116,7 @@
         <h5 class="fw-bold">Санаи бақайдгиршударо интихоб кунед:</h5>
     </div>
 
+
     <!-- Form START -->
     <div class="row mb-4 justify-content-center form-modern">
         <div class="col-md-3 mb-2">
@@ -125,14 +132,19 @@
         </div>
     </div>
     <!-- Form END -->
-
     <div class="card card-modern">
 
         <div class="card-header card-header-modern d-flex justify-content-between align-items-center">
             <h4 class="mb-0">Идоракунии корбар</h4>
-            <span class="badge badge-modern badge-info">
-                Total Users: @Model.Count
-            </span>
+            <div>
+                <span class="badge badge-modern badge-info">
+                    Total Users: @Model.Count
+                </span>
+                <a href="@Url.Action("Pdf","UsersReport")" target="_blank" class="btn-pdf btn btn-sm btn-primary">
+                    <i class="bi bi-file-earmark-pdf-fill me-1"></i> PDF
+                </a>
+            </div>
+
         </div>
 
         <div class="card-body">

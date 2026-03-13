@@ -99,12 +99,12 @@ namespace Auth.Controllers
             TempData["Success"] = "Тасвир бомуваффақият бор карда шуд!";
             return RedirectToAction("Index");
         }
-        [HttpGet]
-        public FileResult Reports()
-        {
+        //[HttpGet]
+        //public FileResult Reports()
+        //{
 
 
-            return File(Server.MapPath("~/Reports/report.pdf"), "application/pdf", "report.pdf");
-        }
+        //    return File(Server.MapPath("~/Reports/report.pdf"), "application/pdf", "report.pdf");
+        //}
 }
 }

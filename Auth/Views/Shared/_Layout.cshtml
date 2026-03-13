@@ -67,6 +67,7 @@
                     <li class="nav-item">
                         @Html.ActionLink("Dashboard", "Index", "Dashboard", null, new { @class = "nav-link" })
                     </li>
+
                     @if (Session["Role"] != null && Session["Role"].ToString() == "Admin")
                     {
                         <li class="nav-item">

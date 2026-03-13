@@ -1,5 +1,7 @@
 ﻿using Auth.DAL;
 using Auth.Models;
+using DevExpress.CodeParser;
+using Microsoft.Ajax.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,28 +14,6 @@ using System.Web.Mvc;
 namespace Auth.Controllers
 {
     public class AccountController : Controller {
-
-
-
-        public ActionResult TestConnection()
-
-
-        {
-            try
-            {
-                using (SqlConnection conn = DatabaseHelper.GetConnection())
-                {
-                    conn.Open();
-                }
-                return Content("Connected to SQL Server successfully!");
-            }
-            catch (Exception ex)
-            {
-                return Content("Connection failed: " + ex.Message);
-            }
-        }
-
-
 
         // GET: Register Page
         public ActionResult Register()
@@ -59,20 +39,12 @@ namespace Auth.Controllers
                     SqlCommand cmd = new SqlCommand("registerUser", conn);
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    //cmd.Parameters.AddWithValue("@FullName", user.FullName.Trim());
-                    //cmd.Parameters.AddWithValue("@Username", user.Username.Trim());
-                    //cmd.Parameters.AddWithValue("@Email", user.Email.Trim());
-                    //cmd.Parameters.AddWithValue("@Password", user.Password.Trim());
-                    //cmd.Parameters.AddWithValue("@Role", "user");
-
-
                     cmd.Parameters.Add("@FullName", SqlDbType.NVarChar, 255).Value = user.FullName.Trim();
                     cmd.Parameters.Add("@Email", SqlDbType.NVarChar, 255).Value = user.Email.Trim();
                     cmd.Parameters.Add("@Password", SqlDbType.NVarChar, 255).Value = user.Password.Trim();
                     cmd.Parameters.Add("@Role", SqlDbType.NVarChar, 50).Value = user.Role.Trim();
 
 
-                    // Output parameter for status
                     SqlParameter statusParam = new SqlParameter("@Status", SqlDbType.Int)
                     {
                         Direction = ParameterDirection.Output
@@ -99,8 +71,6 @@ namespace Auth.Controllers
             return RedirectToAction("Login");
         }
 
-
-
         // GET: Login Page
         public ActionResult Login()
         {
@@ -120,19 +90,16 @@ namespace Auth.Controllers
                     SqlCommand cmd = new SqlCommand("loginUser", conn);
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    //cmd.Parameters.AddWithValue("@Email", Email.Trim());
-                    //cmd.Parameters.AddWithValue("@Password", Password);
-
                     cmd.Parameters.Add("@Email", SqlDbType.NVarChar, 255).Value = Email.Trim();
                     cmd.Parameters.Add("@Password", SqlDbType.NVarChar, 255).Value = Password.Trim();
 
                     using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
                     {
-                        DataTable dt = new DataTable();
-                        adapter.Fill(dt);
-                        if (dt.Rows.Count > 0)
+                        DataTable userTable = new DataTable();
+                        adapter.Fill(userTable);
+                        if (userTable.Rows.Count > 0)
                         {
-                            DataRow row = dt.Rows[0];
+                            DataRow row = userTable.Rows[0];
                             // Create session
                             Session["UserId"] = row["Id"];
                             Session["Email"] = row["Email"];
@@ -155,6 +122,7 @@ namespace Auth.Controllers
             }
         }
 
+        //GET: Change Password Page
         [HttpGet]
         public ActionResult ChangePassword()
         {
@@ -167,6 +135,7 @@ namespace Auth.Controllers
             return View();
         }
 
+        //POST: Change Password Page
         [HttpPost]
         public ActionResult ChangePassword(FormCollection form)
         {
@@ -179,7 +148,7 @@ namespace Auth.Controllers
 
             if (string.IsNullOrEmpty(current) || string.IsNullOrEmpty(newPass))
             {
-                ViewBag.ErrorMessage = "Fields cannot be empty!";
+                ViewBag.ErrorMessage = "Майдонҳо холӣ буда наметавонанд.!";
                 return View();
             }
 
@@ -192,11 +161,12 @@ namespace Auth.Controllers
                 using (SqlCommand cmd = new SqlCommand(checkQuery, conn))
                 {
                     cmd.Parameters.AddWithValue("@Email", email);
+                    //The null - conditional operator prevents errors if no record is returned
                     var dbPassword = cmd.ExecuteScalar()?.ToString();
 
                     if (dbPassword != current)
                     {
-                        ViewBag.ErrorMessage = "Current password is incorrect!";
+                        ViewBag.ErrorMessage = "Рамз нодуруст аст!";
                         return View();
                     }
                 }
@@ -205,26 +175,22 @@ namespace Auth.Controllers
                 string updateQuery = "UPDATE Users SET Password=@Password WHERE Email=@Email";
                 using (SqlCommand cmd = new SqlCommand(updateQuery, conn))
                 {
-                    cmd.Parameters.AddWithValue("@Password", newPass);
-                    cmd.Parameters.AddWithValue("@Email", email);
+                    cmd.Parameters.Add("@Password", SqlDbType.NVarChar, 255).Value = newPass.Trim();
+                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar, 255).Value = email.Trim();
                     cmd.ExecuteNonQuery();
                 }
             }
 
-            ViewBag.SuccessMessage = "Password changed successfully!";
+            ViewBag.SuccessMessage = "Парол бомуваффақият иваз карда шуд!";
             return View();
         }
 
-
-
+        // GET: Logout
         public ActionResult Logout()
         {
             Session.Clear();
             return RedirectToAction("Login");
         }
 
-
     }
-
-
  }
