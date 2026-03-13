@@ -126,7 +126,7 @@
                     {
                         var role = Session["Role"].ToString();
 
-                        if (role == "Admin" || role == "Editor" || role == "Moderator" || Session["Username"].ToString() == post.Author)
+                        if (role == "Admin" || role == "Editor" || role == "Moderator" || Session["Email"].ToString() == post.Author)
                         {
                             <a href="/Posts/Edit/@post.Id" class="btn btn-modern btn-modern-warning btn-sm me-2">
                                 Edit

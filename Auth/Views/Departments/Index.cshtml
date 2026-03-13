@@ -1,0 +1,98 @@
+﻿@model List<Auth.Models.Department>
+
+@{
+    ViewBag.Title = "Departments";
+}
+
+<style>
+    /* Card styling */
+    .card-modern {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        background: #f4f8fc;
+    }
+
+    .card-header-modern {
+        background: linear-gradient(90deg, #1e3c72, #2a5298);
+        color: #ffffff;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+        box-shadow: inset 0 -3px 6px rgba(0,0,0,0.1);
+    }
+
+    .table-modern th {
+        background: #1e3c72;
+        color: #fff;
+        font-weight: 500;
+    }
+
+    .table-modern tbody tr:hover {
+        background-color: rgba(30,60,114,0.1);
+        transition: background 0.2s;
+    }
+
+    .badge-modern {
+        font-weight: 500;
+        padding: 0.35em 0.6em;
+        border-radius: 8px;
+    }
+
+    .badge-head {
+        background: #007bff;
+        color: #fff;
+    }
+
+    .badge-nohead {
+        background: #6c757d;
+        color: #fff;
+    }
+</style>
+
+<div class="container mt-5">
+
+    <div class="card card-modern">
+
+        <div class="card-header card-header-modern d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Department Management</h4>
+            <span class="badge badge-modern badge-info">
+                Total Departments: @Model.Count
+            </span>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover table-modern align-middle">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Department Name</th>
+                            <th>Head of Department</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var dept in Model)
+                        {
+                            <tr>
+                                <td>#@dept.Id</td>
+                                <td><strong>@dept.Name</strong></td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(dept.HeadName))
+                                    {
+                                        <span class="badge badge-modern badge-head">@dept.HeadName</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-modern badge-nohead">No Head</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</div>

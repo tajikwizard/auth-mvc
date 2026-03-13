@@ -1,14 +1,70 @@
-﻿@{
+﻿@model List<Auth.Models.Image>
+
+@{
     ViewBag.Title = "Dashboard";
 }
 
-
 <div class="container mt-5">
+
+    <!-- Messages -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show message-alert">
+            @TempData["Success"]
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show message-alert">
+            @TempData["Error"]
+        </div>
+    }
 
     <h2>Dashboard</h2>
 
-    <div class="alert alert-success">
-        Welcome to your dashboard!
+    <form method="post" enctype="multipart/form-data" action="/Dashboard/Upload">
+        <div class="mb-3">
+            <label for="file" class="form-label">Тасвирро бор кунед</label>
+            <input type="file" name="file" class="form-control" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Бор кунед</button>
+    </form>
+
+    <hr />
+
+    <h4>Тасвирҳои боршуда</h4>
+    <div class="row">
+        @foreach (var img in Model)
+        {
+            <div class="col-md-3 mb-3">
+                <div class="card">
+                    <img src="@img.FilePath" class="card-img-top" />
+                    <div class="card-body">
+                        <p class="card-text text-truncate">@img.FileName</p>
+                        <p class="text-muted small">by @img.Uploader</p>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 
 </div>
+
+@section scripts {
+    <script>document.addEventListener("DOMContentLoaded", function () {
+            const alerts = document.querySelectorAll(".message-alert");
+
+            alerts.forEach(alert => {
+                // Initial fade-in
+                alert.style.opacity = 0;
+                alert.style.transition = "opacity 0.5s";
+                setTimeout(() => alert.style.opacity = 1, 100);
+
+                // Fade out after 4 seconds
+                setTimeout(() => {
+                    alert.style.opacity = 0;
+                    setTimeout(() => alert.remove(), 500);
+                }, 4000);
+            });
+        });</script>
+}

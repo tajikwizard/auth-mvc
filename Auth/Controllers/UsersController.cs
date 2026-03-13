@@ -34,7 +34,6 @@ namespace Auth.Controllers
                         {
                             Id = (int)reader["Id"],
                             FullName = reader["FullName"].ToString(),
-                            Username = reader["Username"].ToString(),
                             Email = reader["Email"].ToString(),
                             Role = reader["Role"].ToString()
                         });
@@ -108,7 +107,6 @@ namespace Auth.Controllers
                         {
                             Id = (int)reader["Id"],
                             FullName = reader["FullName"].ToString(),
-                            Username = reader["Username"].ToString(),
                             Email = reader["Email"].ToString(),
                             Role = reader["Role"].ToString()
                         });

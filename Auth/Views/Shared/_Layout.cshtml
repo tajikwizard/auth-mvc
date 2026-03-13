@@ -72,12 +72,16 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/Users/Index">Users</a>
                         </li>
+
+                        <li>
+                            @Html.ActionLink("Departments", "Index", "Departments", new { area = "" }, new { @class = "nav-link" })
+                        </li>
                     }
                 </ul>
 
                 <!-- RIGHT SIDE -->
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    @if (Session["Username"] != null)
+                    @if (Session["Email"] != null)
                     {
                         <li class="nav-item">
                             <a class="nav-link" href="/Posts/Index">Posts</a>
@@ -85,7 +89,7 @@
 
                         <li class="nav-item">
                             <span class="nav-link welcome-text">
-                                Welcome @Session["Username"]
+                                Welcome @Session["Email"]
                             </span>
                         </li>
 

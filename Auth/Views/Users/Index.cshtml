@@ -107,17 +107,17 @@
     }
 
     <div class="text-center mb-4">
-        <h5 class="fw-bold">Choose the date to see registered users</h5>
+        <h5 class="fw-bold">Санаи бақайдгиршударо интихоб кунед:</h5>
     </div>
 
     <!-- Form START -->
     <div class="row mb-4 justify-content-center form-modern">
         <div class="col-md-3 mb-2">
-            <label class="form-label">From:</label>
+            <label class="form-label">Намоиши корбарон аз:</label>
             <input type="date" id="fromDate" name="fromDate" class="form-control" />
         </div>
         <div class="col-md-3 mb-2">
-            <label class="form-label">To:</label>
+            <label class="form-label">то:</label>
             <input type="date" id="toDate" name="toDate" class="form-control" />
         </div>
         <div class="col-md-2 align-self-end mb-2">
@@ -129,7 +129,7 @@
     <div class="card card-modern">
 
         <div class="card-header card-header-modern d-flex justify-content-between align-items-center">
-            <h4 class="mb-0">User Management</h4>
+            <h4 class="mb-0">Идоракунии корбар</h4>
             <span class="badge badge-modern badge-info">
                 Total Users: @Model.Count
             </span>
@@ -142,7 +142,6 @@
                         <tr>
                             <th>ID</th>
                             <th>Full Name</th>
-                            <th>Username</th>
                             <th>Email</th>
                             <th>Role</th>
                             <th>Access</th>
@@ -154,7 +153,6 @@
                             <tr>
                                 <td>#@user.Id</td>
                                 <td><strong>@user.FullName</strong></td>
-                                <td class="text-muted">@user.Username</td>
                                 <td class="text-primary">@user.Email</td>
                                 <td>
                                     @if (user.Role == "Admin")
@@ -178,7 +176,7 @@
                                     <form method="post" action="/Users/ChangeRole">
                                         <input type="hidden" name="userId" value="@user.Id" />
                                         <select name="role" class="form-select form-select-sm" onchange="this.form.submit()">
-                                            <option value="User" @(user.Role == "User" ? "selected" : "")>User</option>
+                                            <option value="User" @(user.Role == "user" ? "selected" : "")>User</option>
                                             <option value="Editor" @(user.Role == "Editor" ? "selected" : "")>Editor</option>
                                             <option value="Moderator" @(user.Role == "Moderator" ? "selected" : "")>Moderator</option>
                                             <option value="Admin" @(user.Role == "Admin" ? "selected" : "")>Admin</option>

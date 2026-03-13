@@ -73,7 +73,7 @@ namespace Auth.Controllers
                     cmd.Parameters.AddWithValue("@Title", post.Title);
                     cmd.Parameters.AddWithValue("@Content", post.Content);
 
-                    cmd.Parameters.AddWithValue("@Author", Session["Username"].ToString());
+                    cmd.Parameters.AddWithValue("@Author", Session["Email"].ToString());
 
                     cmd.ExecuteNonQuery();
                 }
@@ -85,7 +85,7 @@ namespace Auth.Controllers
 
         public ActionResult Edit(int id)
         {
-            if (Session["Username"] == null)
+            if (Session["Email"] == null)
             {
                 return View("AccessDenied");
             }
@@ -125,12 +125,12 @@ namespace Auth.Controllers
 
             string role = Session["Role"].ToString();
 
-            if (post.Author != Session["Username"].ToString()
+            if (post.Author != Session["Email"].ToString()
                 && role != "Admin"
                 && role != "Editor"
                 && role != "Moderator")
             {
-                return View("AccessDenied");
+                return View("AccessDenied");        
             }
 
             return View(post);
@@ -140,8 +140,8 @@ namespace Auth.Controllers
         [HttpPost]
         public ActionResult Edit(Post post)
         {
-            if (Session["Username"] == null)
-            {
+            if (Session["Email"] == null)
+            {       
                 return View("AccessDenied");  
             }
 
@@ -155,7 +155,7 @@ namespace Auth.Controllers
 
                 string role = Session["Role"].ToString();
 
-                if (role == "User")
+                if (role == "user")
                 {
                     query += " AND Author=@Author";
                 }
@@ -166,9 +166,9 @@ namespace Auth.Controllers
                     cmd.Parameters.AddWithValue("@Content", post.Content);
                     cmd.Parameters.AddWithValue("@Id", post.Id);
 
-                    if (role == "User")
+                    if (role == "user")
                     {
-                        cmd.Parameters.AddWithValue("@Author", Session["Username"].ToString());
+                        cmd.Parameters.AddWithValue("@Author", Session["Email"].ToString());
                     }
 
                     cmd.ExecuteNonQuery();

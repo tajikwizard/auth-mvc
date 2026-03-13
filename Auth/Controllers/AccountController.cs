@@ -67,7 +67,6 @@ namespace Auth.Controllers
 
 
                     cmd.Parameters.Add("@FullName", SqlDbType.NVarChar, 255).Value = user.FullName.Trim();
-                    cmd.Parameters.Add("@Username", SqlDbType.NVarChar, 255).Value = user.Username.Trim();
                     cmd.Parameters.Add("@Email", SqlDbType.NVarChar, 255).Value = user.Email.Trim();
                     cmd.Parameters.Add("@Password", SqlDbType.NVarChar, 255).Value = user.Password.Trim();
                     cmd.Parameters.Add("@Role", SqlDbType.NVarChar, 50).Value = user.Role.Trim();
@@ -136,7 +135,7 @@ namespace Auth.Controllers
                             DataRow row = dt.Rows[0];
                             // Create session
                             Session["UserId"] = row["Id"];
-                            Session["Username"] = row["Username"];
+                            Session["Email"] = row["Email"];
                             Session["Role"] = row["Role"];
 
                             return RedirectToAction("Index", "Dashboard");
@@ -171,10 +170,10 @@ namespace Auth.Controllers
         [HttpPost]
         public ActionResult ChangePassword(FormCollection form)
         {
-            if (Session["Username"] == null)
+            if (Session["Email"] == null)
                 return RedirectToAction("Login", "Account");
 
-            string username = Session["Username"].ToString();
+            string email = Session["Email"].ToString();
             string current = form["CurrentPassword"];
             string newPass = form["NewPassword"];
 
@@ -189,10 +188,10 @@ namespace Auth.Controllers
                 conn.Open();
 
                 // Verify current password
-                string checkQuery = "SELECT Password FROM Users WHERE Username=@Username";
+                string checkQuery = "SELECT Password FROM Users WHERE Email=@Email";
                 using (SqlCommand cmd = new SqlCommand(checkQuery, conn))
                 {
-                    cmd.Parameters.AddWithValue("@Username", username);
+                    cmd.Parameters.AddWithValue("@Email", email);
                     var dbPassword = cmd.ExecuteScalar()?.ToString();
 
                     if (dbPassword != current)
@@ -203,11 +202,11 @@ namespace Auth.Controllers
                 }
 
                 // Update password
-                string updateQuery = "UPDATE Users SET Password=@Password WHERE Username=@Username";
+                string updateQuery = "UPDATE Users SET Password=@Password WHERE Email=@Email";
                 using (SqlCommand cmd = new SqlCommand(updateQuery, conn))
                 {
                     cmd.Parameters.AddWithValue("@Password", newPass);
-                    cmd.Parameters.AddWithValue("@Username", username);
+                    cmd.Parameters.AddWithValue("@Email", email);
                     cmd.ExecuteNonQuery();
                 }
             }
